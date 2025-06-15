@@ -2,16 +2,14 @@ import { createPortal } from 'react-dom';
 import css from './NoteModal.module.css';
 import NoteForm from '../NoteForm/NoteForm';
 import { useEffect } from 'react';
-import type { NoteFormValues } from '../../types/note';
 
-type NoteModalProps = {
+interface NoteModalProps {
   onClose: () => void;
-  onCreate: (note: NoteFormValues) => void;
-};
+}
 
 
 
-export default function NoteModal({ onClose, onCreate }: NoteModalProps) {
+export default function NoteModal({ onClose }: NoteModalProps) {
   useEffect(() => {
     const handle = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -19,6 +17,14 @@ export default function NoteModal({ onClose, onCreate }: NoteModalProps) {
     window.addEventListener('keydown', handle);
     return () => window.removeEventListener('keydown', handle);
   }, [onClose]);
+
+  useEffect(() => {
+    // Disable scroll
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   return createPortal(
     <div
@@ -31,7 +37,7 @@ export default function NoteModal({ onClose, onCreate }: NoteModalProps) {
       className={css.modal}
       onClick={(e) => e.stopPropagation()} // prevent close when clicking inside modal
     >
-      <NoteForm onCancel={onClose} onSubmit={onCreate} />
+      <NoteForm onClose={onClose} />
     </div>
   </div>,
   document.body

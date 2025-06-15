@@ -37,11 +37,12 @@ export const createNote = async (note: {
       },
     }
   );
-  return response.data.data;
+  console.log('createNote API response:', response.data);
+  return response.data;
 };
 
-export const deleteNote = async (id: string): Promise<{ message: string }> => {
-  const response = await axios.delete(
+export const deleteNote = async (id: number): Promise<Note> => {
+  const response = await axios.delete<Note>(
     `https://notehub-public.goit.study/api/notes/${id}`,
     {
       headers: {
@@ -49,5 +50,6 @@ export const deleteNote = async (id: string): Promise<{ message: string }> => {
       },
     }
   );
+
   return response.data;
 };
